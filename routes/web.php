@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -9,6 +11,15 @@ Route::get('/', function () {
 Route::get('/criar-conta', function () {
     return view('criar-conta');
 });
+
+Route::post('/salva-conta', function (Request $request) {
+   //dd($request);
+   $user = new User();
+   $user->name = $request->name;
+   $user->email = $request->email;
+   $user->password = $request->password;
+   $user->save();
+})->name('salva-conta');
 
 Route::get('/teste', function () {
     return 'O código foi testado';
