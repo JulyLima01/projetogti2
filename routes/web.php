@@ -77,3 +77,15 @@ Route::get('/subtração/{num1}/{num2}', function ($num1, $num2) {
 Route::get('/multiplicação/{num1}/{num2}', function ($num1, $num2) {
     return 'a multiplicação é: '.$num1 * $num2;
 });
+
+Route::get('/cadastra-equipe', function () {
+    return view('cadastra-equipe');
+})->name("cadastra-equipe")->middleware('auth');
+
+Route::post('/logout', function (Request $request) {
+   
+        Auth::logout();
+        $request->session()->regenerate();
+        return redirect()->route('/');
+    
+})->name('logout');
