@@ -4,6 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Equipe extends Model
+class Contato extends Model
 {
 }

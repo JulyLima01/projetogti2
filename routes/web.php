@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Aula;
+use App\Models\Contato;
+use App\Models\Recursos;
 use App\Models\User;
 use App\Models\Equipe;
 use Illuminate\Http\Request;
@@ -64,7 +67,7 @@ Route::get('/usuario/{nome}', function ($nome) {
 });
 
 Route::get('/soma/{num1}/{num2}', function ($num1, $num2) {
-    return 'a soma é: '.$num1 + $num2;
+    return 'a soma é: ' . $num1 + $num2;
 });
 
 Route::get('/divisão/{num1}/{num2}', function ($num1, $num2) {
@@ -104,7 +107,64 @@ return "Equipe salva com sucesso!!";
 
 })->name('salva-equipe')->middleware('auth');
 
+Route::get('/lista-aula', function () {
+    $aula = Aula::all();
+    return view('lista-aula', compact('aula'));
+})->name("lista-aula");
+
+Route::post('/salva-aula', function (Request $request){
+//dd($request);
+$aula = new Aula(); 
+$aula->nome = $request->nome;
+$aula->periodo = $request->periodo;
+$aula->professor = $request->professor;
+$aula->qtdAulas = $request->qtdAulas;
+$aula->save();
+
+return "Aula salva com sucesso!!";
+
+})->name('salva-aula')->middleware('auth');
+
+Route::get('/cadastra-aula', function () {
+    return view('cadastra-aula');
+})->name("cadastra-aula")->middleware('auth');
+
+
 Route::get('/lista-equipe', function () {
     $equipe = Equipe::all();
-    return view('lista-equipe',compact('equipe'));
+return view('lista-equipe', compact('equipe'));
+
 })->name("lista-equipe");
+
+Route::get('/sobre', function () {
+    return view('sobre');
+})->name('sobre');
+
+Route::get('/recursos', function () {
+    $recursos = Recursos::all();
+    return view('recursos', compact('recursos'));
+})->name('recursos');
+
+// Exibe o formulário
+Route::get('/fale-conosco', function () {
+    return view('fale-conosco');
+})->name('fale-conosco');
+
+// Processa o envio
+Route::post('/enviar-contato', function (Request $request) {
+    $request->validate([
+        'nome' => 'required|string|max:255',
+        'email' => 'required|email',
+        'mensagem' => 'required|string'
+    ]);
+
+    $contato = new Contato();
+    $contato->nome = $request->nome;
+    $contato->email = $request->email;
+    $contato->mensagem = $request->mensagem;
+    $contato->save();
+
+    return redirect()->route('fale-conosco')->with('success', 'Mensagem enviada com sucesso!');
+})->name('enviar-contato');
+
+
